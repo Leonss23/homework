@@ -1,4 +1,19 @@
-let errormsg = document.querySelector("#errormsg");
+let notificationElement = {
+  element: document.querySelector("#errormsg"),
+  showError: function (errors) {
+    this.element.classList.remove("hidden");
+    errortxt = `${errors.join("; ")}.`;
+    this.element.textContent = errortxt;
+  },
+  hideError: function () {
+    this.element.classList.add("hidden");
+    this.element.textContent = "";
+  },
+  showSuccess: function (success) {
+    this.element.classList.toggle("successmsg");
+    this.element.textContent = success;
+  },
+};
 
 let usernameElement = document.querySelector("#username");
 let passwordElement = document.querySelector("#password");
@@ -28,7 +43,7 @@ function FlashError(element) {
     setTimeout(() => {
       element.classList.remove("flashError");
     }, 5000)
-    );
+  );
   //  = setTimeout(() => {
   //   element.classList.remove("flashError");
   // }, 5000);
@@ -45,25 +60,30 @@ function FlashError(element) {
 function LogIn() {
   let username = usernameElement.value;
   let password = passwordElement.value;
-  emptyFields = false;
-  if (!username.length > 0) {
-    FlashError(usernameElement);
-    emptyFields = true;
+  emptyFields = checkEmptyFields([usernameElement, passwordElement]);
+  if (emptyFields)
+    return notificationElement.showError(["There are empty fields"]);
+  verifiedUser = AlreadyHas(users, "username", username);
+  if (verifiedUser) {
+    if (password === users[verifiedUser]["password"]) {
+      notificationElement.showSuccess(`Successfully logged in as ${username}.`);
+    }
   }
-  if (!password.length > 0) {
-    FlashError(passwordElement);
-    emptyFields = true;
-  }
-  if (emptyFields) return showError(["There are empty fields"]);
 }
 
 function NewUser() {
-  hideError();
+  notificationElement.hideError();
   console.log(users);
   let username = usernameElement.value;
   let password = passwordElement.value;
   let email = emailElement.value;
-  let emptyFields = checkEmptyFields([username, password, email]);
+  let emptyFields = checkEmptyFields([
+    usernameElement,
+    passwordElement,
+    emailElement,
+  ]);
+  if (emptyFields)
+    return notificationElement.showError(["There are empty fields"]);
   let errors = [];
   if (username.length < 4) {
     FlashError(usernameElement);
@@ -81,8 +101,12 @@ function NewUser() {
     FlashError(emailElement);
     errors.push("Invalid e-mail");
   }
-  if (emptyFields) return showError(["There are empty fields"]);
-  if (errors.length > 0) return showError(errors);
+  if (AlreadyHas(users, "email", email)) {
+    FlashError(emailElement);
+    errors.push("Email already in use");
+  }
+
+  if (errors.length > 0) return notificationElement.showError(errors);
   users.push({
     username,
     password,
@@ -90,25 +114,20 @@ function NewUser() {
   });
 }
 
-function showError(errors) {
-  errormsg.classList.remove("hidden");
-  errortxt = `${errors.join(", ")}.`;
-  errormsg.textContent = errortxt;
-}
-function hideError(){
-  errormsg.classList.add("hidden");
-  errormsg.textContent = "";
-}
-
-
 function AlreadyHas(array, property, item) {
-  for (const value of array) {
+  for (const [key, value] of array) {
     if (value[property] === item) return true;
+    return key;
   }
-  return false;
 }
+
 function checkEmptyFields(array) {
-  for (const value of array) {
-    if (!value.length > 0) return true;
+  let emptyFields = false;
+  for (const element of array) {
+    if (!element.value.length > 0) {
+      FlashError(element);
+      emptyFields = true;
+    }
   }
+  return emptyFields;
 }
