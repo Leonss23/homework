@@ -1,25 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Funcional</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <main>
-        <div id="container">
-            <img src="https://media.artsbma.org/wp-content/uploads/2019/06/08150244/fingerprint.png" alt="" width="80px">
-            <form>
-                <input id="username" type="text" placeholder="Username" maxlength="30">
-                <input id="email" type="text" placeholder="E-mail" maxlength="30">
-                <input id="password" type="password" placeholder="Password" maxlength="30">
-                <input type="button" value="Sign up">
-            </form>
-            <span>By creating an account, you agree and accept our <a href="#">Terms and  Privacy Policy</a>.</span>
-            <p>Already have an account? <a href="#">Log in</a></p>
-        </div>
+      <div id="container">
+          <img src="fingerprint.webp" alt="" width="80px" /><br>
+          <p id="errormsg" class="hidden">errormsg here</p>
+          <form>
+            <input
+              id="username"
+              type="text"
+              placeholder="Username"
+              maxlength="30"
+            />
+            <input
+              class="switch"
+              id="email"
+              type="text"
+              placeholder="E-mail"
+              maxlength="30"
+            />
+            <input
+              id="password"
+              type="password"
+              placeholder="Password"
+              maxlength="30"
+            />
+            <input class="switch" type="button" value="Sign up" onclick="NewUser()" />
+            <input class="switch hidden" type="button" value="Log in" onclick="LogIn()" />
+          </form>
+          <span class="switch"
+            >By creating an account, you agree and accept our
+            <a href="#">Terms and Privacy Policy</a>.</span
+          >
+          <p class="switch bottomp">Already have an account? <a onclick="SwitchTabs()">Log in.</a></p>
+          <p class="switch hidden bottomp">Don't have an account? <a onclick="SwitchTabs()">Register.</a></p>
+      </div>
     </main>
-</body>
+    <script src="visuals.js"></script>
+    <script src="userSystem.js"></script>
+  </body>
 </html>
