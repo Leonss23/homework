@@ -59,17 +59,19 @@ function FlashError(element) {
   */
 }
 function LogIn() {
+  notificationElement.hideError();
   let username = usernameElement.value;
   let password = passwordElement.value;
-  emptyFields = checkEmptyFields([usernameElement, passwordElement]);
-  if (emptyFields)
-    return notificationElement.showError(["There are empty fields"]);
+  if (checkEmptyFields([usernameElement, passwordElement])) return;
   verifiedUser = AlreadyHas(users, "username", username);
   if (verifiedUser) {
     if (password === users[verifiedUser[0]]["password"]) {
-      notificationElement.showSuccess(`Successfully logged in as "${username}".`);
+      return notificationElement.showSuccess(
+        `Successfully logged in as "${username}".`
+      );
     }
   }
+  return notificationElement.showError(["Invalid credentials"]);
 }
 
 function NewUser() {
@@ -78,13 +80,8 @@ function NewUser() {
   let username = usernameElement.value;
   let password = passwordElement.value;
   let email = emailElement.value;
-  let emptyFields = checkEmptyFields([
-    usernameElement,
-    passwordElement,
-    emailElement,
-  ]);
-  if (emptyFields)
-    return notificationElement.showError(["There are empty fields"]);
+  if (checkEmptyFields([usernameElement, passwordElement, emailElement]))
+    return;
   let errors = [];
   if (username.length < 4) {
     FlashError(usernameElement);
@@ -131,5 +128,21 @@ function checkEmptyFields(array) {
       emptyFields = true;
     }
   }
+  if (emptyFields) notificationElement.showError(["There are empty fields"]);
   return emptyFields;
+}
+
+function DeleteUser() {
+  notificationElement.hideError();
+  let username = usernameElement.value;
+  let password = passwordElement.value;
+  if (checkEmptyFields([usernameElement, passwordElement])) return;
+  verifiedUser = AlreadyHas(users, "username", username);
+  if (verifiedUser) {
+    if (password === users[verifiedUser[0]]["password"]) {
+      users.splice([verifiedUser[0]], 1);
+      notificationElement.showError([`"${username}" deleted`]);
+    }
+  }
+  return notificationElement.showError(["Invalid credentials"]);
 }

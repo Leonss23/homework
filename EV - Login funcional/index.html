@@ -10,37 +10,54 @@
   <body>
     <main>
       <div id="container">
-          <img src="fingerprint.webp" alt="" width="80px" /><br>
-          <p id="errormsg" class="hidden">errormsg here</p>
-          <form>
-            <input
-              id="username"
-              type="text"
-              placeholder="Username"
-              maxlength="30"
-            />
-            <input
-              class="switch"
-              id="email"
-              type="text"
-              placeholder="E-mail"
-              maxlength="30"
-            />
-            <input
-              id="password"
-              type="password"
-              placeholder="Password"
-              maxlength="30"
-            />
-            <input class="switch" type="button" value="Sign up" onclick="NewUser()" />
-            <input class="switch hidden" type="button" value="Log in" onclick="LogIn()" />
-          </form>
-          <span class="switch"
-            >By creating an account, you agree and accept our
-            <a href="#">Terms and Privacy Policy</a>.</span
+        <img src="fingerprint.webp" alt="" width="80px" /><br />
+        <p id="errormsg" class="hidden">errormsg here</p>
+        <form>
+          <input
+            id="username"
+            type="text"
+            placeholder="Username"
+            maxlength="30"
+          />
+          <input
+            class="switch"
+            id="email"
+            type="text"
+            placeholder="E-mail"
+            maxlength="30"
+          />
+          <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            maxlength="30"
+          />
+          <input
+            class="switch"
+            type="button"
+            value="Sign up"
+            onclick="NewUser()"
+          />
+          <input
+            class="switch hidden"
+            type="button"
+            value="Log in"
+            onclick="LogIn()"
+          />
+          <a href="#" class="hidden switch" onclick="DeleteUser()"
+            ><br /><br />Or click this one to delete</a
           >
-          <p class="switch bottomp">Already have an account? <a onclick="SwitchTabs()">Log in.</a></p>
-          <p class="switch hidden bottomp">Don't have an account? <a onclick="SwitchTabs()">Register.</a></p>
+        </form>
+        <span class="switch"
+          >By creating an account, you agree and accept our
+          <a href="#">Terms and Privacy Policy</a>.</span
+        >
+        <p class="switch bottomp">
+          Already have an account? <a onclick="SwitchTabs()">Log in.</a>
+        </p>
+        <p class="switch hidden bottomp">
+          Don't have an account? <a onclick="SwitchTabs()">Register.</a>
+        </p>
       </div>
     </main>
     <script src="visuals.js"></script>
