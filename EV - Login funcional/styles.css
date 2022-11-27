@@ -113,7 +113,7 @@ main {
 }
 
 .successmsg{
-  background-color: hsl(120, 100%, 80%);
-  border: 2px rgb(0, 255, 0) solid;
-  color: rgb(0, 147, 0);
+  background-color: hsl(120, 100%, 80%) !important;
+  border: 2px rgb(0, 255, 0) solid !important;
+  color: rgb(0, 147, 0) !important;
 }

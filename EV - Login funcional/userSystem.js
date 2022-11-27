@@ -10,6 +10,7 @@ let notificationElement = {
     this.element.textContent = "";
   },
   showSuccess: function (success) {
+    this.element.classList.remove("hidden");
     this.element.classList.toggle("successmsg");
     this.element.textContent = success;
   },
@@ -65,8 +66,8 @@ function LogIn() {
     return notificationElement.showError(["There are empty fields"]);
   verifiedUser = AlreadyHas(users, "username", username);
   if (verifiedUser) {
-    if (password === users[verifiedUser]["password"]) {
-      notificationElement.showSuccess(`Successfully logged in as ${username}.`);
+    if (password === users[verifiedUser[0]]["password"]) {
+      notificationElement.showSuccess(`Successfully logged in as "${username}".`);
     }
   }
 }
@@ -112,13 +113,14 @@ function NewUser() {
     password,
     email,
   });
+  notificationElement.showSuccess(`Successfully registered as "${username}".`);
 }
 
 function AlreadyHas(array, property, item) {
-  for (const [key, value] of array) {
-    if (value[property] === item) return true;
-    return key;
+  for (let key = 0; key < array.length; key++) {
+    if (array[key][property] === item) return [key];
   }
+  return 0;
 }
 
 function checkEmptyFields(array) {
