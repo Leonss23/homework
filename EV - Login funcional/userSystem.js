@@ -2,6 +2,7 @@ let notificationElement = {
   element: document.querySelector("#errormsg"),
   showError: function (errors) {
     this.element.classList.remove("hidden");
+    this.element.classList.remove("successmsg");
     errortxt = `${errors.join("; ")}.`;
     this.element.textContent = errortxt;
   },
@@ -11,8 +12,8 @@ let notificationElement = {
   },
   showSuccess: function (success) {
     this.element.classList.remove("hidden");
-    this.element.classList.toggle("successmsg");
-    this.element.textContent = success;
+    this.element.classList.add("successmsg");
+    this.element.textContent = `${success}.`;
   },
 };
 
@@ -35,7 +36,7 @@ function FlashError(element) {
     element.classList.add("flashError");
 
   if (flashErrorTimeouts.has(`${element.id}`)) {
-    timeout = flashErrorTimeouts.get(`${element.id}`);
+    let timeout = flashErrorTimeouts.get(`${element.id}`);
     clearTimeout(timeout);
   }
 
@@ -59,19 +60,10 @@ function FlashError(element) {
   */
 }
 function LogIn() {
-  notificationElement.hideError();
-  let username = usernameElement.value;
-  let password = passwordElement.value;
-  if (checkEmptyFields([usernameElement, passwordElement])) return;
-  verifiedUser = AlreadyHas(users, "username", username);
-  if (verifiedUser) {
-    if (password === users[verifiedUser[0]]["password"]) {
-      return notificationElement.showSuccess(
-        `Successfully logged in as "${username}".`
-      );
-    }
-  }
-  return notificationElement.showError(["Invalid credentials"]);
+  if (CheckEmptyFields([usernameElement, passwordElement])) return;
+  VerifyCredentials((userid) => {
+    notificationElement.showSuccess(`Successfully logged in as "${users[userid].username}"`);
+  });
 }
 
 function NewUser() {
@@ -80,7 +72,7 @@ function NewUser() {
   let username = usernameElement.value;
   let password = passwordElement.value;
   let email = emailElement.value;
-  if (checkEmptyFields([usernameElement, passwordElement, emailElement]))
+  if (CheckEmptyFields([usernameElement, passwordElement, emailElement]))
     return;
   let errors = [];
   if (username.length < 4) {
@@ -110,7 +102,7 @@ function NewUser() {
     password,
     email,
   });
-  notificationElement.showSuccess(`Successfully registered as "${username}".`);
+  notificationElement.showSuccess(`Successfully registered as "${username}"`);
 }
 
 function AlreadyHas(array, property, item) {
@@ -120,7 +112,7 @@ function AlreadyHas(array, property, item) {
   return 0;
 }
 
-function checkEmptyFields(array) {
+function CheckEmptyFields(array) {
   let emptyFields = false;
   for (const element of array) {
     if (!element.value.length > 0) {
@@ -133,15 +125,30 @@ function checkEmptyFields(array) {
 }
 
 function DeleteUser() {
+  if (CheckEmptyFields([usernameElement, passwordElement])) return;
+  VerifyCredentials((userid) => {
+    notificationElement.showSuccess(`Successfully deleted ${users[userid].username}`);
+    users.splice(userid, 1);
+  });
+}
+
+function ChangePassword() {
+  if (CheckEmptyFields([usernameElement, passwordElement])) return;
+  VerifyCredentials((userid) => {
+    users[userid].password = prompt("New password: ");
+    notificationElement.showSuccess(`Successfully changed ${users[userid].username}'s password`);
+  });
+}
+
+function VerifyCredentials(callback) {
   notificationElement.hideError();
   let username = usernameElement.value;
   let password = passwordElement.value;
-  if (checkEmptyFields([usernameElement, passwordElement])) return;
-  verifiedUser = AlreadyHas(users, "username", username);
+  let verifiedUser = AlreadyHas(users, "username", username);
   if (verifiedUser) {
-    if (password === users[verifiedUser[0]]["password"]) {
-      users.splice([verifiedUser[0]], 1);
-      notificationElement.showError([`"${username}" deleted`]);
+    let userid = verifiedUser[0];
+    if (password === users[userid]["password"]) {
+      return callback(userid);
     }
   }
   return notificationElement.showError(["Invalid credentials"]);
